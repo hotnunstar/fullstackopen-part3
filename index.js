@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+const morgan = require("morgan");
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :response-time ms :body'));
+
 let persons = [
   {
     id: 1,
@@ -51,10 +55,12 @@ app.post("/api/persons", (request, response) => {
   const body = request.body;
 
   if (!body.name) return response.status(400).json({ error: "name missing" });
-  if (!body.number) return response.status(400).json({ error: "number missing" });
+  if (!body.number)
+    return response.status(400).json({ error: "number missing" });
 
-  const previewPerson = persons.find((person) => person.name === body.name)
-  if (previewPerson) return response.status(400).json({ error: "name must be unique" });
+  const previewPerson = persons.find((person) => person.name === body.name);
+  if (previewPerson)
+    return response.status(400).json({ error: "name must be unique" });
 
   const person = {
     name: body.name,
