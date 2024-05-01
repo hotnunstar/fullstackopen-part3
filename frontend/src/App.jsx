@@ -40,6 +40,8 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== personID ? p : returnedPerson))
             setType('success')
+            setNewName('')
+            setNewNumber('')
             setNotificationMessage(`${nameObject.name}'s phone number has been updated`)
             setTimeout(() => { setNotificationMessage(null) }, 5000)
           })
@@ -48,8 +50,6 @@ const App = () => {
             setNotificationMessage(`An error occurred updating the number of ${nameObject.name}`)
             setTimeout(() => { setNotificationMessage(null) }, 5000)
           })
-        setNewName('')
-        setNewNumber('')
       }
     }
     else {
@@ -61,6 +61,11 @@ const App = () => {
           setNewNumber('')
           setType('success')
           setNotificationMessage(`Added ${nameObject.name}`)
+          setTimeout(() => { setNotificationMessage(null) }, 5000)
+        })
+        .catch(error => {
+          setType('error')
+          setNotificationMessage(error.response.data.error)
           setTimeout(() => { setNotificationMessage(null) }, 5000)
         })
     }
